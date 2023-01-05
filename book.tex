@@ -1,0 +1,148 @@
+\documentclass[twoside, 11pt, a5paper]{memoir}
+% Green Cover
+\usepackage{gmverse}
+\usepackage{helvet}
+\usepackage{calc}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\graphicspath{{../IMAGES/}{./}}
+\renewcommand{\rmdefault}{phv}
+\setlength{\parindent}{0pt}
+\special{papersize=14.8cm,21.0cm}
+\pdfpageheight=21.0cm
+\pdfpagewidth=14.8cm
+% spine, fore-edge, ratio
+\setlrmarginsandblock{25mm}{12mm}{*}
+\textheight180mm
+\setbinding{15mm}
+% upper, lower, ratio
+\setulmargins{*}{8mm}{*}%
+\setheadfoot{12mm}{8mm}
+\setheaderspaces{*}{10mm}{*}
+%\setlength{\headsep}{0pt}
+\footskip0pt
+\checkandfixthelayout[classic]
+\let\centre\center
+\makeindex
+\makeatletter
+\def\myindex#1{%
+  \expandafter\@@index{{#1}}%
+}
+\def\@@index#1{%
+  \index{#1}
+}
+\makeatother
+\raggedbottom  
+\newenvironment{poem}[3][]{%
+  \begingroup%Move heading into heading space
+  \clearpage
+ \setlength{\parskip}{0pt}
+  \setlength{\partopsep}{0pt}
+  \mbox{}\vspace*{-25mm}%
+  \parbox[t][18mm][b]{\linewidth}{
+  \mbox{}\\[0.5\headsep]%
+  \mbox{}\hspace{-.5em}\Large\textbf{\MakeUppercase{#2}}\\[15mm]
+}\\
+\mbox{}\\
+  \ifx\newenvironment#1\newenvironment\myindex{#2}\else\myindex{#1}\fi
+  \normalsize
+}{\mbox{}\vspace*{1ex+0.2\fill}\endgroup}
+\def\tagline#1{
+  \mbox{}\\
+  \mbox{}\hspace{\verseleftskip}\textsl{#1}\\[-.1\headsep]
+  }
+
+\newenvironment{micropoem}[3][]{%
+  % \par\nobreak\vfil\penalty0\vfilneg
+  \par\filbreak
+  \bgroup
+  \setlength{\parskip}{0pt}
+  \setlength{\partopsep}{0pt}
+%  \mbox{}\vspace{1cm plus 0.2\fill minus 0.1\fill}
+%  \mbox{}\hspace{1em}\large\textbf{\MakeUppercase{#2}}\mbox{}\\[-1ex]
+%  \mbox{}\vspace*{-1\headsep}
+  \mbox{}\\[0.4\headsep]%
+  \mbox{}\hspace{#3}\Large\textbf{\MakeUppercase{#2}}
+  \nopagebreak
+  \vspace*{-0.1\headsep}\nopagebreak
+  \ifx\newenvironment#1\newenvironment\myindex{#2}\else\myindex{#1}\fi
+  \normalsize
+  \verseleftskip=#3
+}{\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}
+
+\newenvironment{cmicropoem}[3][]{%
+  \par\nobreak\vfil\penalty0\vfilneg
+  \vtop
+  \bgroup
+  \setlength{\parskip}{0pt}
+  \setlength{\partopsep}{0pt}
+%  \mbox{}\vspace{1cm plus 0.2\fill minus 0.1\fill}
+%  \mbox{}\hspace{1em}\large\textbf{\MakeUppercase{#2}}\mbox{}\\[-1ex]
+%  \mbox{}\vspace*{-1\headsep}
+  \mbox{}\\[0.2\headsep]%
+  {\centering
+    \mbox{}\Large\textbf{\MakeUppercase{#2}}\\[0pt -
+    2\fill]
+    }
+  \ifx\newenvironment#1\newenvironment\myindex{#2}\else\myindex{#1}\fi
+  \normalsize
+  \verseleftskip=#3
+}{\par\xdef\tpd{\the\prevdepth}\egroup
+   \prevdepth=\tpd}
+\newenvironment{stanza}%
+{\nopagebreak\verse}{\endverse\par}
+\newenvironment{altstanza}{\filbreak\verseleftskip=1.5\verseleftskip\verse\relax}{\endverse}
+\newenvironment{widestanza}[1]{\begingroup\filbreak\versemaxline{#1}\verseleftskip=0mm\verse}{\endverse\endgroup}
+
+\makeoddfoot{headings}{\today}{DRAFT}{}
+\makeevenfoot{headings}{}{DRAFT}{\today}
+\makeevenhead{headings}{\thepage}{}{}
+\makeoddhead{headings}{}{}{\thepage}
+\makeoddhead{plain}{}{}{\thepage}
+\makeevenhead{plain}{\thepage}{}{}
+\makeheadrule{plain}{\linewidth}{0.5pt}
+\makeheadrule{headings}{\linewidth}{0.5pt}
+\makeoddhead{plain}{}{}{\thepage}
+\makeevenfoot{plain}{}{DRAFT}{\today}
+\makeoddfoot{plain}{\today}{DRAFT}{}
+\makeoddfoot{plain}{}{}{}
+\begin{document}
+\input{frontmatter}
+\clearpage
+\onecolindex
+\chapterstyle{article}
+\printindex
+\cleartorecto\pagestyle{empty}
+\centering
+\mbox{}\\[\fill]
+  Typeset by Peter Chubb in 11pt Helvetica using \LaTeX\ and the
+  Memoir document class. \\[\fill]
+\clearpage
+\thispagestyle{empty}
+\mbox{}\\[-\mytmargin]
+\setlength\fboxrule{1pt}
+\fbox{\rlap{\begin{minipage}[t]{106mm}
+    \mbox{}\\[169mm]
+  \end{minipage}}{
+  \quad\begin{minipage}[t]{100mm}
+    \mbox{}\\[1cm]
+    \begin{centering}
+%      \includegraphics[width=0.8\linewidth]{}\\[2ex]
+    \end{centering}
+    \begin{minipage}[h]{0.9\linewidth}
+    \textbf{about the author}\\
+    \lipsum[1]
+
+\textbf{about the book}\\
+\lipsum[2]
+\end{minipage}
+\end{minipage}}
+}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
