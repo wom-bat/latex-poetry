@@ -1,6 +1,7 @@
 #!/bin/sh
-x=`basename "$1" .pdf`
-pdftops $x.pdf $x.ps
-psbook -q $x.ps $x-book.ps
-psnup -q  -pa4 -Pa5 -2 $x-book.ps $x-sig.ps
-ps2pdf $x-sig.ps
+# x=`basename "$1" .pdf`
+# pdftops $x.pdf $x.ps
+# psbook -q $x.ps $x-book.ps
+# psnup -q  -pa4 -Pa5 -2 $x-book.ps $x-sig.ps
+# ps2pdf $x-sig.ps
+pdfjam --landscape --suffix book --booklet true --paper a4paper "$1"
