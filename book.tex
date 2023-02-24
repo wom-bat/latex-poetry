@@ -1,144 +1,218 @@
-\documentclass[twoside, 11pt, a5paper]{memoir}
-% Green Cover
+\documentclass[twoside, 11pt,openany]{memoir}
+%
+% gmverse gives us lines that break on the right with the remainder
+% flush right.  It can also be used to centre a verse on the page by
+% its optical centre.
 \usepackage{gmverse}
+%
+% Use a sans-serif font designed for continuous text.
 \usepackage{helvet}
+\renewcommand{\rmdefault}{phv}
+% Allow scale factors for dimensions without \dimexpr
 \usepackage{calc}
-\usepackage{lipsum}
 \usepackage{graphicx}
 \graphicspath{{../IMAGES/}{./}}
-\renewcommand{\rmdefault}{phv}
-\setlength{\parindent}{0pt}
-\special{papersize=14.8cm,21.0cm}
-\pdfpageheight=21.0cm
-\pdfpagewidth=14.8cm
+% For debugging
+% Lipsum generates dummy text
+\usepackage{lipsum}
+% showframe puts a red frame around text and heading areas
+%\usepackage{showframe}
+%\renewcommand*\ShowFrameColor{\color{red}}
+
+% Printing on A5 paper
+\stockav
+% Trim 6mm off outer edge, to make page edges even.
+\settrims{0mm}{6mm}
+% surprised the class doesn't do this:
+\setlength{\paperwidth}{\stockwidth}
+\addtolength{\paperwidth}{-\trimedge}
+\setlength{\paperheight}{\stockheight}
 % spine, fore-edge, ratio
-\setlrmarginsandblock{25mm}{12mm}{*}
-\textheight180mm
-\setbinding{15mm}
+\setlrmarginsandblock{19mm}{10mm}{*}
+% allowance for spine -- no need if we're binding in a signature
+%\setbinding{5mm}
 % upper, lower, ratio
-\setulmargins{*}{8mm}{*}%
-\setheadfoot{12mm}{8mm}
-\setheaderspaces{*}{10mm}{*}
-%\setlength{\headsep}{0pt}
-\footskip0pt
+\setulmarginsandblock{25mm}{12mm}{*}
+% Make headsep big enough for poem titles.
+\setlength{\headsep}{15mm}
+% amount of vertical space occupied by header and footer text
+\setheadfoot{3ex}{3ex}
+% Page height 210mm; text starts 25mm from top, 19mm from spine.
+% Page width is 142mm; text width 113mm
+% Page number and rule are \headsep (15mm) above the text.
+% Poem titles and taglines go under the rule and over the poem.
 \checkandfixthelayout[classic]
-\let\centre\center
+%
+% We want an index
 \makeindex
-\makeatletter
-\def\myindex#1{%
-  \expandafter\@@index{{#1}}%
-}
-\def\@@index#1{%
-  \index{#1}
-}
-\makeatother
-\raggedbottom  
+% Index should use same page style as everything else
+\aliaspagestyle{indextitlepagestyle}{Ruled}
+% take up a single column
+\onecolindex
+% and not do anything fancy (index is treated as a new chapter.
+% we're not doing chapters)
+\chapterstyle{article}
+% Suppress underfull vbox warnings --- most poems don't fill a page.
+\raggedbottom
+
+% we're doing our own stanza spacing.
+\setlength{\verseskipbefore}{0pt}
+\setlength{\verseskipafter}{0pt}
+\setlength{\parindent}{0pt}
+
+% Calculate where to put titles: move into \headsep space between rule
+% and textblock.  Baseline of text moves up...
+\newlength{\titledrop}
+\setlength{\titledrop}{-\headsep}
+\addtolength{\titledrop}{-12pt} % height of line of text
+% Poem environment
+% Full poem starts at the top of a page
+% optional first argument is the index term
+% other arguments are the poem title and the left margin
+% thus \begin{poem}[limerick, A]{A Limerick}{10mm}
 \newenvironment{poem}[3][]{%
-  \begingroup%Move heading into heading space
-  \clearpage
- \setlength{\parskip}{0pt}
-  \setlength{\partopsep}{0pt}
-  \mbox{}\vspace*{-25mm}%
-  \parbox[t][18mm][b]{\linewidth}{
-  \mbox{}\\[0.5\headsep]%
-  \mbox{}\hspace{-.5em}\Large\textbf{\MakeUppercase{#2}}\\[15mm]
-}\\
-\mbox{}\\
-  \ifx\newenvironment#1\newenvironment\myindex{#2}\else\myindex{#1}\fi
-  \normalsize
-}{\mbox{}\vspace*{1ex+0.2\fill}\endgroup}
-\def\tagline#1{
-  \mbox{}\\
-  \mbox{}\hspace{\verseleftskip}\textsl{#1}\\[-.1\headsep]
-  }
+  % Add first arg to index if it's there;
+  % otherwise use second arg.
+  \def\indexitem{#1}
+  \ifx\indexitem\empty\index{#2}\else\index{#1}\fi%
+  % set up the indent
+  \verseleftskip#3
+  \clearpage % Start at top of page
+  % Move heading into heading space
+  % titledrop is negative
+    \mbox{}\vskip\titledrop
+    \vbox to \headsep{\vskip 1ex% move title down from line
+    \hbox{\Large\textbf{\MakeUppercase{#2}}}}
+}{% At end of poem, leave gap, encourage page break
+  \vskip2ex plus \fill\filbreak}
+
+% A tagline is a dedication or other info subordinate to the title.
+% It goes in the space between the title and the top of the text
+% This means that the top of a multi-page poem will be aligned.
+\def\tagline#1{%
+  % Move to the same place as the title starts
+  \vskip\titledrop
+  % Use vtop to overlap what;s there
+  \vtop to \headsep{%
+    \vskip1.6\baselineskip% skip over title
+    \hbox to \textwidth{\hskip\verseleftskip\textsl{#1}\hfil}%
+  }%
+}
+
 
 \newenvironment{micropoem}[3][]{%
-  % \par\nobreak\vfil\penalty0\vfilneg
-  \par\filbreak
-  \bgroup
-  \setlength{\parskip}{0pt}
+  \ifx\newenvironment#1\newenvironment\index{#2}\else\index{#1}\fi
+  \verseleftskip#3
   \setlength{\partopsep}{0pt}
-%  \mbox{}\vspace{1cm plus 0.2\fill minus 0.1\fill}
-%  \mbox{}\hspace{1em}\large\textbf{\MakeUppercase{#2}}\mbox{}\\[-1ex]
-%  \mbox{}\vspace*{-1\headsep}
-  \mbox{}\\[0.4\headsep]%
-  \mbox{}\hspace{#3}\Large\textbf{\MakeUppercase{#2}}
-  \nopagebreak
-  \vspace*{-0.1\headsep}\nopagebreak
-  \ifx\newenvironment#1\newenvironment\myindex{#2}\else\myindex{#1}\fi
+  \leavevmode
+  \mbox{}\vskip2ex plus \fill%
+  \vbox to 0.5\headsep{%
+    \vfil%
+    \hbox to \textwidth{%
+      \hspace{#3}\Large\textbf{\MakeUppercase{#2}}\hfil%
+    }%
+    \vfil
+  }
   \normalsize
-  \verseleftskip=#3
-}{\par\xdef\tpd{\the\prevdepth}\egroup
-   \prevdepth=\tpd}
+}{\vskip4ex}
 
 \newenvironment{cmicropoem}[3][]{%
-  \par\nobreak\vfil\penalty0\vfilneg
-  \vtop
-  \bgroup
-  \setlength{\parskip}{0pt}
+  \ifx\newenvironment#1\newenvironment\index{#2}\else\index{#1}\fi
+  \verseleftskip#3
   \setlength{\partopsep}{0pt}
-%  \mbox{}\vspace{1cm plus 0.2\fill minus 0.1\fill}
-%  \mbox{}\hspace{1em}\large\textbf{\MakeUppercase{#2}}\mbox{}\\[-1ex]
-%  \mbox{}\vspace*{-1\headsep}
-  \mbox{}\\[0.2\headsep]%
-  {\centering
-    \mbox{}\Large\textbf{\MakeUppercase{#2}}\\[0pt -
-    2\fill]
-    }
-  \ifx\newenvironment#1\newenvironment\myindex{#2}\else\myindex{#1}\fi
+  \mbox{}\vskip 2ex plus \fill%
+  \vbox to 0.5\headsep{%
+    \vfil
+    \hbox to \textwidth{%
+      \mbox{}\hfil\Large\textbf{\MakeUppercase{#2}}\hfil
+    }%
+    \vfil
+  }
   \normalsize
-  \verseleftskip=#3
-}{\par\xdef\tpd{\the\prevdepth}\egroup
-   \prevdepth=\tpd}
-\newenvironment{stanza}%
-{\nopagebreak\verse}{\endverse\par}
-\newenvironment{altstanza}{\filbreak\verseleftskip=1.5\verseleftskip\verse\relax}{\endverse}
-\newenvironment{widestanza}[1]{\begingroup\filbreak\versemaxline{#1}\verseleftskip=0mm\verse}{\endverse\endgroup}
+}{\vskip4ex}
 
-\makeoddfoot{headings}{\today}{DRAFT}{}
-\makeevenfoot{headings}{}{DRAFT}{\today}
-\makeevenhead{headings}{\thepage}{}{}
-\makeoddhead{headings}{}{}{\thepage}
-\makeoddhead{plain}{}{}{\thepage}
-\makeevenhead{plain}{\thepage}{}{}
-\makeheadrule{plain}{\linewidth}{0.5pt}
-\makeheadrule{headings}{\linewidth}{0.5pt}
-\makeoddhead{plain}{}{}{\thepage}
-\makeevenfoot{plain}{}{DRAFT}{\today}
-\makeoddfoot{plain}{\today}{DRAFT}{}
-\makeoddfoot{plain}{}{}{}
+\newenvironment{stanza}%
+{\verse}{\endverse\vskip 10pt\filbreak}
+
+\newenvironment{cstanza}%
+{\parskip0pt\par\centering}{\vskip10pt\filbreak}
+
+\newenvironment{altstanza}[1]%
+{\verseleftskip#1\verse}{\endverse\vskip 10pt\filbreak}
+
+\newenvironment{widestanza}[1]{%
+  \begingroup\versemaxline{#1}\verseleftskip=0mm\verse%
+}%
+{\endverse\endgroup\filbreak}
+
+\makeoddfoot{Ruled}{\today}{DRAFT}{}
+\makeevenfoot{Ruled}{}{DRAFT}{\today}
+\makeevenhead{Ruled}{\thepage}{}{}
+\makeoddhead{Ruled}{}{}{\thepage}
+
+%\showboxdepth=\maxdimen
+%\showboxbreadth=\maxdimen
+%\tracingoutput=1
+%\tracingonline=1
+\typeout{\noexpand\topskip = \the\topskip}
+\typeout{\noexpand\baselineskip = \the\baselineskip}
+\typeout{\noexpand\headsep = \the\headsep}
+% paperwidth is 148mm - trim 6mm = 142mm.
+% spinemargin is 18mm
+% upper margin is 25mm
+% right margin is 10mm
+% lower margin is 10mm
+% Create cover page; optional argument
+% for verso pages.
+\newcommand{\coverpage}[2][]{
+  \begingroup
+  \def\side{#1}%
+  \hbox to \paperwidth{%
+    \hbadness=10000%suppress underfull hbox msgs
+    \hfuzz=\maxdimen
+    \vbox to 0pt{%
+      % Move up
+      \vskip\dimexpr9mm-\uppermargin\relax%
+      % And toward the spine
+      \ifx#1\empty\mbox{}\hskip10mm-\spinemargin\relax%
+      \else\mbox{}\hskip\dimexpr-4mm\relax\fi%
+      % Outer marginal box
+      \fbox{% This will warn of overful box because it extends into the margins
+        \begin{minipage}{122mm}
+          \vbox to 184mm{%
+          \hbadness=10000%suppress underfull hbox msgs
+            #2%
+          }%
+        \end{minipage}%
+      }%
+    }
+  }
+  \endgroup
+}
+
 \begin{document}
 \input{frontmatter}
-\clearpage
-\onecolindex
-\chapterstyle{article}
+\input{poems}
 \printindex
-\cleartorecto\pagestyle{empty}
-\centering
-\mbox{}\\[\fill]
+% \mbox{}\vskip\titledrop
+% \vbox to \headsep{\vskip 1ex% move title down from line
+% \hbox{\Large\textbf{\MakeUppercase{Afterthoughts}}}}
+\input{afterword}
+\mbox{}\ifodd0.5\thesheetsequence\relax\else\mbox{}\cleardoublepage\fi
+\cleartorecto
+\pagestyle{empty}
+\vskip\titledrop
+\vbox to 0.8\paperheight{
+  \vss
+  \centering
   Typeset by Peter Chubb in 11pt Helvetica using \LaTeX\ and the
-  Memoir document class. \\[\fill]
-\clearpage
-\thispagestyle{empty}
-\mbox{}\\[-\mytmargin]
-\setlength\fboxrule{1pt}
-\fbox{\rlap{\begin{minipage}[t]{106mm}
-    \mbox{}\\[169mm]
-  \end{minipage}}{
-  \quad\begin{minipage}[t]{100mm}
-    \mbox{}\\[1cm]
-    \begin{centering}
-%      \includegraphics[width=0.8\linewidth]{}\\[2ex]
-    \end{centering}
-    \begin{minipage}[h]{0.9\linewidth}
-    \textbf{about the author}\\
-    \lipsum[1]
-
-\textbf{about the book}\\
-\lipsum[2]
-\end{minipage}
-\end{minipage}}
+  Memoir document class.
+  \vss
 }
+\clearpage
+% back cover.
+\thispagestyle{empty}
+\include{backcover}
 \end{document}
 
 %%% Local Variables:
