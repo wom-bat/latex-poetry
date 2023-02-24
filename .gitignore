@@ -4,3 +4,6 @@ dependencies
 *.idx
 *.log
 *~
+*.ilg
+*.ind
+*.pdf
