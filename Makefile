@@ -1,5 +1,7 @@
 TARGET=book
 
+all: ${TARGET}-book.pdf
+
 ${TARGET}.pdf: ${TARGET}.ind
 	pdflatex ${TARGET}.tex
 
@@ -8,7 +10,7 @@ ${TARGET}.ind: ${TARGET}.tex
 	makeindex -L ${TARGET}.idx
 	rm ${TARGET}.pdf
 
-${TARGET}-sig.pdf: ${TARGET}.pdf
+${TARGET}-book.pdf: ${TARGET}.pdf
 	./to-book ${TARGET}.pdf
 clean:
 	rm -f *.aux *.log *.idx *.ind
