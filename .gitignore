@@ -1,0 +1,6 @@
+auto/
+dependencies
+*.aux
+*.idx
+*.log
+*~
