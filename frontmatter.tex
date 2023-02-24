@@ -1,82 +1,74 @@
-\frontmatter
+\def\theauthor{The Author}
+\def\thetitle{TITLE}
+\def\thenumber{Volume 4}
+
 \thispagestyle{empty}
-\newlength{\mytmargin}
-\setlength{\mytmargin}{\headsep}
-\advance\mytmargin by 0.3\headheight
-\mbox{}\\[-1\mytmargin]\hspace*{-1mm}
-\setlength\fboxrule{1pt}
-\fbox{\rlap{\begin{minipage}[t]{106mm}
-    \mbox{}\\[169mm]
-  \end{minipage}}
-  \begin{minipage}[t]{106mm}
-    \mbox{}\\[22mm]
-    \mbox{}\hspace*{12mm}{\fontsize{30}{35}\selectfont \textbf{What\ldots.?}}\\[10mm]
-    \mbox{}\hspace*{28mm}%
-    \fbox{
-      \includegraphics[width=47mm]{}
-    }
+\setlength\fboxrule{1mm}
+\newsavebox{\titlepage}
+\sbox{\titlepage}{%
+  \hbadness=10000
+  \coverpage{
+    \hfuzz=\maxdimen
     \begin{center}
-      \mbox{}\\[1ex]
-      {\Large \textbf{Poetry}}\\
-      \Large
-      \textbf{By}\\
-      \textbf{AUTHOR}\\[20mm]
+      \vskip22mm
+      \fontsize{18mm}{23mm}\selectfont%
+      \textsl{\textbf{\thetitle}}\\[5mm]
+%
+      \fbox{%
+        \includegraphics[width=55mm]{baby-wombat
+        }%
+      }\\
+      {\fontsize{6mm}{7mm}\selectfont%
+        \textbf{Poetry}}\\
+      \Large%
+      \textbf{by}\\
+      \textbf{\theauthor}\\[15mm]
     \end{center}
-    \mbox{}\hspace*{\fill}{Volume n\qquad}
-  \end{minipage}
-}
-\cleartorecto\thispagestyle{empty}
-\setcounter{page}{1}
-\mbox{}\\[-1\mytmargin]\hspace*{-1mm}
-\setlength\fboxrule{1pt}
-\fbox{\rlap{\begin{minipage}[t]{106mm}
-    \mbox{}\\[169mm]
-  \end{minipage}}
-  \begin{minipage}[t]{106mm}
-    \mbox{}\\[22mm]
-    \mbox{}\hspace*{12mm}{\fontsize{30}{35}\selectfont \textbf{What\ldots.?}}\\[10mm]
-    \mbox{}\hspace*{28mm}%
-    \fbox{
-      \includegraphics[width=47mm]{}
-    }
-    \begin{center}
-      \mbox{}\\[1ex]
-      {\Large \textbf{Poetry}}\\
-      \Large
-      \textbf{By}\\
-      \textbf{AUTHOR}\\[20mm]
-    \end{center}
-    \mbox{}\hspace*{\fill}{ Volume n\qquad}
-  \end{minipage}
+    \hfill\textbf{\thenumber}
+  }
 }
 
+\usebox{\titlepage}
+\hfuzz=\maxdimen
+
+\cleartorecto
+\thispagestyle{empty}
+\usebox{\titlepage}
+
+\setcounter{page}{1}
+\cleartoverso
 \renewcommand{\thepage}{\roman{page}}
-\mbox{}\par
-{\normalsize
-  NOTES\\
-}
+\mbox{}
+\begingroup
+\normalsize\setlength{\parskip}{0.5ex plus 0.3ex}
+ \textbf{NOTES}
+  
+\endgroup
 \vspace*{\fill}
 \mbox{}\par
 {\small
-Copyright \copyright\ 2022 AUTHOR\\
+Copyright \copyright\ 2023 \theauthor\\
 All rights reserved.\\
 No part of this publication may be reproduced or transmitted, in any
 form or by any means, electronic or mechanical, including photocopy,
 recording or any information storage and retrieval system, without
-permission in writing from the copyright holders.\\[0.5ex]
+permission in writing from the copyright holders.
+
 \begin{center}
-ISBN: 123456789X\\
+ISBN: 123--456--789--0\
 \end{center}
 
 }
 \vspace*{1cm}
 \cleartorecto
-\pagestyle{headings}
+\pagestyle{Ruled}
+\begingroup
 \input{foreword}
+\endgroup
 \cleartorecto
 \mainmatter
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: boot.tex
+%%% TeX-master: "why"
 %%% End:
