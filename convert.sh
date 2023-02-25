@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# Do a basic conversion from word into TeX
+# Splits poems into stazas, puts a poem environment around each.
+# Expects one poem per file.
 case "$1" in
     *.doc)
 	b=`basename "$1" .doc`
