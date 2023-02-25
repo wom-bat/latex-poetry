@@ -19,6 +19,8 @@ clobber: clean
 
 dependencies: ${TARGET}.tex
 	echo "${TARGET}.ind: foreword.tex\\" > $@
-	sed -n -e 's/%.*//' -e 's/\\input{\(.*\)}/\1.tex\\/p' ${TARGET}.tex >> $@
-	sed -n -e 's/%.*//' -e 's/\\include{\(.*\)}/\1.tex\\/p' ${TARGET}.tex >> $@
+	for x in ${TARGET}.tex poems.tex ; do \
+	sed -n -e 's/%.*//' -e 's/\\input{\(.*\)}/\1.tex\\/p' $$x >> $@;\
+	sed -n -e 's/%.*//' -e 's/\\include{\(.*\)}/\1.tex\\/p' $$x >> $@;\
+	done
 -include  dependencies
