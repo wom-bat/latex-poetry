@@ -242,9 +242,13 @@
 % \hbox{\Large\textbf{\MakeUppercase{Afterthoughts}}}}
 \input{afterword}
 % Put colophon on inside of back cover.
-\mbox{}\ifodd0.5\thesheetsequence\relax\else\mbox{}\cleardoublepage\fi
-\cleartorecto
+\newcount\sheetnum
+\sheetnum\thesheetsequence
+\divide\sheetnum by2\relax%
+\typeout{\thesheetsequence `thesheet \the\sheetnum}
 \pagestyle{empty}
+\mbox{}\ifodd\sheetnum\relax\else\newpage\mbox{}\newpage\mbox{}\fi
+\cleartorecto
 \vskip\titledrop
 \vbox to 0.8\paperheight{
   \vss
