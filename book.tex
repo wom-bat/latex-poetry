@@ -12,10 +12,13 @@
 \usepackage{calc}
 \usepackage{graphicx}
 \graphicspath{{./IMAGES}{../IMAGES/}{./}}
+
 % For debugging
 % Lipsum generates dummy text
 \usepackage{lipsum}
+
 % showframe puts a red frame around text and heading areas
+% UNcomment to enable.
 %\usepackage{showframe}
 %\renewcommand*\ShowFrameColor{\color{red}}
 
@@ -28,7 +31,11 @@
   \fbox{#1}
   \endgroup
 }
-
+% Adjust these to get more debugging oiutput
+%\showboxdepth=\maxdimen
+%\showboxbreadth=\maxdimen
+%\tracingoutput=1
+%\tracingonline=1
 
 
 % Printing on A5 paper
@@ -59,13 +66,11 @@
 % and textblock.  Baseline of text moves up...
 \newlength{\titledrop}
 \titledrop\dimexpr-\headsep-\baselineskip
-\raggedbottom
 
 % we're doing our own stanza spacing.
 \setlength{\verseskipbefore}{0pt}
 \setlength{\verseskipafter}{0pt}
 \setlength{\parindent}{0pt}
-
 
 % Poem environment
 % Full poem starts at the top of a page
@@ -94,7 +99,7 @@
 \def\tagline#1{%
   % Move to the same place as the title starts
   \vskip\titledrop
-  % Use vtop to overlap what;s there
+  % Use vtop to overlap what's there
   \vtop to \headsep{%
     \vskip1.6\baselineskip% skip over title
     \hbox to \textwidth{\hskip\verseleftskip\textsl{#1}\hfil}%
@@ -166,8 +171,8 @@
 \ifdraftdoc\makeoddfoot{Ruled}{\today}{DRAFT}{}
 \makeevenfoot{Ruled}{}{DRAFT}{\today}
 \else
-\makeoddfoot{Ruled}{\today}{}{}
-\makeevenfoot{Ruled}{}{}{\today}
+\makeoddfoot{Ruled}{}{}{}
+\makeevenfoot{Ruled}{}{}{}
 \fi
 \makeevenhead{Ruled}{\thepage}{}{}
 \makeoddhead{Ruled}{}{}{\thepage}
@@ -190,19 +195,17 @@
   \let\item\@idxitem}{}
 \makeatother
 
-%\showboxdepth=\maxdimen
-%\showboxbreadth=\maxdimen
-%\tracingoutput=1
-%\tracingonline=1
-\typeout{\noexpand\topskip = \the\topskip}
-\typeout{\noexpand\baselineskip = \the\baselineskip}
-\typeout{\noexpand\headsep = \the\headsep}
+% More debugging
+%\typeout{\noexpand\topskip = \the\topskip}
+%\typeout{\noexpand\baselineskip = \the\baselineskip}
+%\typeout{\noexpand\headsep = \the\headsep}
 % paperwidth is 148mm - trim 6mm = 142mm.
 % spinemargin is 18mm
 % upper margin is 25mm
 % right margin is 10mm
 % lower margin is 10mm
-% Create cover page; optional argument
+
+% Create cover page; optional argument non-empty
 % for verso pages.
 \newcommand{\coverpage}[2][]{
   \begingroup
@@ -233,7 +236,6 @@
 \begin{document}
 \input{frontmatter}
 \input{poems}
-
 \printindex
 % \mbox{}\vskip\titledrop
 % \vbox to \headsep{\vskip 1ex% move title down from line
