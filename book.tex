@@ -175,8 +175,8 @@
 
 % We want an index
 \makeindex
-% Make the index look liek everything else.
-% It's probably possible to do this by fiddline with teh (many)
+% Make the index look like everything else.
+% It's probably possible to do this by fiddling with the (many)
 % parameters for 'chapter', but it's easier just to redefine the
 % index environment.
 
@@ -233,11 +233,13 @@
 \begin{document}
 \input{frontmatter}
 \input{poems}
+
 \printindex
 % \mbox{}\vskip\titledrop
 % \vbox to \headsep{\vskip 1ex% move title down from line
 % \hbox{\Large\textbf{\MakeUppercase{Afterthoughts}}}}
 \input{afterword}
+% Put colophon on inside of back cover.
 \mbox{}\ifodd0.5\thesheetsequence\relax\else\mbox{}\cleardoublepage\fi
 \cleartorecto
 \pagestyle{empty}
