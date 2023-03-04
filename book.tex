@@ -244,11 +244,21 @@
 % Put colophon on inside of back cover.
 \newcount\sheetnum
 \sheetnum\thesheetsequence
-\divide\sheetnum by2\relax%
-\typeout{\thesheetsequence `thesheet \the\sheetnum}
+% plus 2 to allow for cover; plus 3 to round to nearest multiple of 4
+\advance\sheetnum5\relax
+\divide\sheetnum by4\relax%
+\multiply\sheetnum by4\relax
+\advance\sheetnum-2\relax
+\typeout{sheet \thesheetsequence\ target \the\sheetnum}
 \pagestyle{empty}
-\mbox{}\ifodd\sheetnum\relax\else\newpage\mbox{}\newpage\mbox{}\fi
+\ifnum\thesheetsequence<\sheetnum\newpage\mbox{}\fi
+\typeout{sheet \thesheetsequence\ target \the\sheetnum}
+\ifnum\thesheetsequence<\sheetnum\newpage\mbox{}\fi
+\typeout{sheet \thesheetsequence\ target \the\sheetnum}
+\ifnum\thesheetsequence<\sheetnum\newpage\mbox{}\fi
+\typeout{sheet \thesheetsequence\ target \the\sheetnum}
 \cleartorecto
+\typeout{sheet \thesheetsequence\ target \the\sheetnum}
 \vskip\titledrop
 \vbox to 0.8\paperheight{
   \vss
