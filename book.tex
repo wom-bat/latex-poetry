@@ -1,4 +1,4 @@
-\documentclass[twoside, 11pt,openany]{memoir}
+\documentclass[twoside, 11pt]{memoir}
 %
 % gmverse gives us lines that break on the right with the remainder
 % flush right.  It can also be used to centre a verse on the page by
@@ -18,6 +18,18 @@
 % showframe puts a red frame around text and heading areas
 %\usepackage{showframe}
 %\renewcommand*\ShowFrameColor{\color{red}}
+
+% for debugging: put a tight frame just around the inside of
+% something.
+% Add around whatever you want to see the boundary of.
+\def\tightframe#1{
+  \begingroup%
+  \fboxrule1pt\fboxsep-1pt%
+  \fbox{#1}
+  \endgroup
+}
+
+
 
 % Printing on A5 paper
 \stockav
@@ -43,16 +55,10 @@
 % Poem titles and taglines go under the rule and over the poem.
 \checkandfixthelayout[classic]
 %
-% We want an index
-\makeindex
-% Index should use same page style as everything else
-\aliaspagestyle{indextitlepagestyle}{Ruled}
-% take up a single column
-\onecolindex
-% and not do anything fancy (index is treated as a new chapter.
-% we're not doing chapters)
-\chapterstyle{article}
-% Suppress underfull vbox warnings --- most poems don't fill a page.
+% Calculate where to put titles: move into \headsep space between rule
+% and textblock.  Baseline of text moves up...
+\newlength{\titledrop}
+\titledrop\dimexpr-\headsep-\baselineskip
 \raggedbottom
 
 % we're doing our own stanza spacing.
@@ -60,11 +66,7 @@
 \setlength{\verseskipafter}{0pt}
 \setlength{\parindent}{0pt}
 
-% Calculate where to put titles: move into \headsep space between rule
-% and textblock.  Baseline of text moves up...
-\newlength{\titledrop}
-\setlength{\titledrop}{-\headsep}
-\addtolength{\titledrop}{-12pt} % height of line of text
+
 % Poem environment
 % Full poem starts at the top of a page
 % optional first argument is the index term
@@ -99,7 +101,8 @@
   }%
 }
 
-
+% A micropoem is a short poem, styled to fit on a page not at the top.
+% Same arguments as fro the poem environment.
 \newenvironment{micropoem}[3][]{%
   \ifx\newenvironment#1\newenvironment\index{#2}\else\index{#1}\fi
   \verseleftskip#3
@@ -116,6 +119,8 @@
   \normalsize
 }{\vskip4ex}
 
+% A cmicropoem is a micropoem centred on the page.
+% Usually it'll use the cstanza environment for stanzas.
 \newenvironment{cmicropoem}[3][]{%
   \ifx\newenvironment#1\newenvironment\index{#2}\else\index{#1}\fi
   \verseleftskip#3
@@ -131,24 +136,59 @@
   \normalsize
 }{\vskip4ex}
 
+% A stanza is a section of poetry.
 \newenvironment{stanza}%
 {\verse}{\endverse\vskip 10pt\filbreak}
 
+% A cstanza i a centred stanza
 \newenvironment{cstanza}%
 {\parskip0pt\par\centering}{\vskip10pt\filbreak}
 
-\newenvironment{altstanza}[1]%
+% An altstanza is a stanza with a different indentation from the
+% stanzas around it.  Indentation is given by the (optional) argument;
+% if not given, it's 1.3 times the left skip given to the surrounding
+% poem environment.
+\newenvironment{altstanza}[1][1.3\verseleftskip]%
 {\verseleftskip#1\verse}{\endverse\vskip 10pt\filbreak}
 
+% A wide stanza is one that is too wide to lookgood with the standard
+% settings.
+% Its argument is the longest line in it, or its fellow stanzas.
+% It will be optically centred on that line's width.
+% In a poem with more than one wide stanzas, that line should be the
+% same for all widestanzas
 \newenvironment{widestanza}[1]{%
   \begingroup\versemaxline{#1}\verseleftskip=0mm\verse%
 }%
-{\endverse\endgroup\filbreak}
+{\endverse\vskip10pt\endgroup\filbreak}
 
-\makeoddfoot{Ruled}{\today}{DRAFT}{}
+% Set headers and footers.
+\ifdraftdoc\makeoddfoot{Ruled}{\today}{DRAFT}{}
 \makeevenfoot{Ruled}{}{DRAFT}{\today}
+\else
+\makeoddfoot{Ruled}{\today}{}{}
+\makeevenfoot{Ruled}{}{}{\today}
+\fi
 \makeevenhead{Ruled}{\thepage}{}{}
 \makeoddhead{Ruled}{}{}{\thepage}
+
+
+% We want an index
+\makeindex
+% Make the index look liek everything else.
+% It's probably possible to do this by fiddline with teh (many)
+% parameters for 'chapter', but it's easier just to redefine the
+% index environment.
+
+\makeatletter
+\renewenvironment{theindex}{
+  \clearpage
+  \mbox{}\vskip\titledrop
+  \vbox to \headsep{\vskip 1ex% move title down from line
+    \hbox{\LARGE\textbf{Index}}}
+  \parskip\z@ \@plus .3\p@\relax
+  \let\item\@idxitem}{}
+\makeatother
 
 %\showboxdepth=\maxdimen
 %\showboxbreadth=\maxdimen
